@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTeamRequest;
 use App\Http\Requests\UpdateTeamRequest;
 use App\Models\OurTeam;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OurTeamController extends Controller
 {
@@ -32,6 +33,19 @@ class OurTeamController extends Controller
     public function store(StoreTeamRequest $request)
     {
         //
+        DB::transaction(function() use ($request){
+            $validated = $request->validated();
+
+            if($request->hasFile('avatar')){
+                $iconPath = $request->file('avatar')->store('avatars', 'public');
+                $validated['avatar'] = $iconPath;
+            }
+
+            $newTeam = OurTeam::create($validated);
+
+        });
+
+        return redirect()->route('admin.teams.index')->with('success','berhsil cok');
     }
 
     /**
@@ -61,8 +75,13 @@ class OurTeamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OurTeam $ourTeam)
+    public function destroy(OurTeam $team)
     {
         //
+        DB::transaction(function() use ($team){
+            $team->delete();
+        });
+
+        return redirect()->route('admin.teams.index');
     }
 }

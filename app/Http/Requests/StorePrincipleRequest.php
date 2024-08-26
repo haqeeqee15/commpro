@@ -24,8 +24,8 @@ class StorePrincipleRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'subtitle' => 'required|string|max:255',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'icon' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,webp',
+            'icon' => 'required|image|mimes:jpeg,png,jpg,webp',
         ];  
     }
 }

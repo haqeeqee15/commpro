@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
  
-                @forelse ($principles as $principle )
+                @forelse($principles as $principle)
                 <div class="item-card flex flex-row justify-between items-center">
                     <div class="flex flex-row items-center gap-x-3">
                         <img src="{{ Storage::url($principle->thumbnail) }}" alt="" class="rounded-2xl object-cover w-[90px] h-[90px]">
@@ -24,7 +24,7 @@
                     </div> 
                     <div  class="hidden md:flex flex-col">
                         <p class="text-slate-500 text-sm">Date</p>
-                        <h3 class="text-indigo-950 text-xl font-bold">{{ $principle->create_at }}/h3>
+                        <h3 class="text-indigo-950 text-xl font-bold">{{ $principle->created_at }}</h3>
                     </div>
                     <div class="hidden md:flex flex-row items-center gap-x-3">
                         <a href="{{ route('admin.principles.edit', $principle) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
