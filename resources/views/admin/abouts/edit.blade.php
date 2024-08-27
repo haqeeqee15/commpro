@@ -9,17 +9,27 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg"> 
                 
-                <form method="POST" action=" " enctype="multipart/form-data"> 
+                @if($errors->any())
+                    @foreach ($errors->all() as $error)
+                        <div class="py-3 w-full rounded-3xl bg-red-500 text-white">
+                            {{ $error }}
+                        </div>
+                    @endforeach
+                @endif
+
+                <form method="POST" action="{{ route('admin.abouts.update', $about) }}" enctype="multipart/form-data"> 
+                    @csrf
+                    @method('PUT')
                     <div>
                         <x-input-label for="name" :value="__('Name')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" 
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" value="{{ $about->name }}"
                           required autofocus autocomplete="name" />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="thumbnail" :value="__('thumbnail')" />
-                        <img src=" " alt="" class="rounded-2xl object-cover w-[90px] h-[90px]">
+                        <img src="{{ Storage::url($about->thumbnail) }}" alt="" class="rounded-2xl object-cover w-[90px] h-[90px]">
                         <x-text-input id="thumbnail" class="block mt-1 w-full" type="file" name="thumbnail" autofocus autocomplete="thumbnail" />
                         <x-input-error :messages="$errors->get('thumbnail')" class="mt-2" />
                     </div>

@@ -59,17 +59,31 @@ class OurTeamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(OurTeam $ourTeam)
+    public function edit(OurTeam $team)
     {
         //
+        return view('admin.teams.edit', compact('team'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTeamRequest $request, OurTeam $ourTeam)
+    public function update(UpdateTeamRequest $request, OurTeam $team)
     {
         //
+        DB::transaction(function() use ($request, $team){
+            $validated = $request->validated();
+
+            if($request->hasFile('avatar')){
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                $validated['avatar'] = $avatarPath;
+            }
+
+            $team->update($validated);
+
+        });
+
+        return redirect()->route('admin.teams.index')->with('success','berhsil cok');
     }
 
     /**

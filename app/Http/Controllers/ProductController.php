@@ -62,6 +62,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
+        return view('admin.products.edit', compact('product'));
     }
 
     /**
@@ -70,6 +71,19 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         //
+        DB::transaction(function() use ($request, $product){
+            $validated = $request->validated();
+
+            if($request->hasFile('thumbnail')){
+                $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+                $validated['thumbnail'] = $thumbnailPath;
+            }
+
+            $product->update($validated);
+
+        });
+
+        return redirect()->route('admin.products.index')->with('success','berhsil cok');
     }
 
     /**

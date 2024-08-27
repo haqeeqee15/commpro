@@ -68,17 +68,40 @@ class CompanyAboutController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CompanyAbout $companyAbout)
+    public function edit(CompanyAbout $about)
     {
         //
+        return  view('admin.abouts.edit', compact('about'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAboutRequest $request, CompanyAbout $companyAbout)
+    public function update(UpdateAboutRequest $request, CompanyAbout $about)
     {
         //
+        DB::transaction(function() use ($request, $about){
+            $validated = $request->validated();
+
+            if($request->hasFile('thumbnail')){
+                $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+                $validated['thumbnail'] = $thumbnailPath;
+            }
+
+            $about->update($validated);
+
+            if(!empty($validated['keypoints'])){
+                $about->keypoints()->delete();
+                foreach($validated['keypoints'] as $keypoint){
+                    $about->keypoints()->create([
+                        'keypoint' => $keypoint
+                    ]);
+                }
+            }
+
+        });
+
+        return redirect()->route('admin.abouts.index')->with('success','berhsil cok');
     }
 
     /**

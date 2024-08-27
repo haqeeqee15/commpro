@@ -61,19 +61,32 @@ class CompanyStatisticController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CompanyStatistic $companyStatistic)
+    public function edit(CompanyStatistic $statistic)
     {
         //
+        return view('admin.statistics.edit', compact('statistic'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStatisticRequest $request, CompanyStatistic $companyStatistic)
+    public function update(UpdateStatisticRequest $request, CompanyStatistic $statistic)
     {
-        //
-    }
+        // dd($statistic);
+        DB::transaction(function() use ($request, $statistic){
+            $validated = $request->validated();
 
+            if($request->hasFile('icon')){
+                $iconPath = $request->file('icon')->store('icons', 'public');
+                $validated['icon'] = $iconPath;
+            }
+
+            $statistic->update($validated);
+
+        });
+
+        return redirect()->route('admin.statistics.index')->with('success','berhsil cok');
+    }
     /**
      * Remove the specified resource from storage.
      */
